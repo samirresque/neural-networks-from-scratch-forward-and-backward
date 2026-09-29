@@ -16,7 +16,7 @@ def numerical_gradient(f, x, eps=1e-5):
         f_plus = f(x)
         x[i] = orig-eps
         f_minus = f(x)
-        grad[i] = round((f_plus-f_minus)/(2.0*eps), 1)
+        grad[i] = round((f_plus-f_minus)/(2.0*eps),4)
         
     return grad
 
