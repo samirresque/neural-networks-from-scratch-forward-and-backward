@@ -1,6 +1,6 @@
-# Neural Networks From Scratch: Forward and Backward Pass
+# Neural Networks From Scratch: Forward and Backward
 
-The aim of this project is to complete neural network stack from scratch in NumPy: finite-difference gradient checks, dense and activation layers, loss, sequential composition, optimizers, and a training loop that overfits then generalizes on a nonlinear dataset.
+Implement a complete neural network stack from scratch in NumPy: finite-difference gradient checks, dense and activation layers, loss, sequential composition, optimizers, and a training loop that overfits then generalizes on a nonlinear dataset.
 
 ## How to run
 
@@ -13,7 +13,7 @@ python scaffold.py
 - [x] **1.** numerical_gradient
 - [x] **2.** gradient_check
 - [x] **3.** make_dense
-- [ ] **4.** make_activation
+- [x] **4.** make_activation
 - [ ] **5.** initialize_weights
 - [ ] **6.** make_loss
 - [ ] **7.** make_sequential
