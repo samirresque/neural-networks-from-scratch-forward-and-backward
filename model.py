@@ -17,6 +17,7 @@ def numerical_gradient(f, x, eps=1e-5):
         x[i] = orig-eps
         f_minus = f(x)
         grad[i] = round((f_plus-f_minus)/(2.0*eps),4)
+        x[i] = orig
         
     return grad
 
@@ -76,7 +77,7 @@ def make_dense(in_dim, out_dim, weight_init_fn):
       # db: (out_dim, 1)
       dx = dout @ params['W'].T
       dW = x.T @ dout
-      db = np.sum(dout, axis=0)  
+      db = np.sum(dout, axis=0).T  
       grads = {'W': dW, 'b':db}
       
       return dx, grads
