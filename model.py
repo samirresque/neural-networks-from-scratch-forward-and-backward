@@ -141,8 +141,50 @@ def initialize_weights(in_dim, out_dim, scheme='he'):
     b = np.zeros(out_dim)
     return (W, b)
 
-# Step 6 - make_loss (not yet solved)
-# TODO: implement
+# Step 6 - make_loss
+def make_loss(kind='cross_entropy'):
+    """Return a classification loss_fn(logits, labels) -> (loss, d_logits).
+
+    Inputs to loss_fn:
+      logits: (batch, C) float array of raw class scores
+      labels: (batch,) int array of class indices in [0, C)
+    Outputs:
+      loss: Python float, mean scalar loss over the batch (finite)
+      d_logits: (batch, C) gradient of loss w.r.t. logits (finite)
+    Must pass gradient_check, be minimized by confident correct predictions,
+    and stay finite under saturated logits.
+    """
+
+    '''
+      using softmax activation for the output layer, we get the following:
+      say 'y' is the final output, logits. we convert logits to prob (by satisfying the
+      axioms of probability ofcourse)
+      probs = softmax(y) --> probs = e^(y)/ sum(e^y), where
+      probs is the multi-class predictions for each input vector.
+    '''
+
+    def loss_fn(logits, labels):
+      # logits: shape(batch, C), C = raw class score(outs from the output layer) before softmax activation
+      # labels: shape(batch,) int array of class indices in [0,C] i,e true labels for each input vector
+      logits = logits - np.max(logits, axis=1, keepdims=True) # for numerical stability
+      exp_logits = np.exp(logits)
+      probs = exp_logits/np.sum(exp_logits, axis=1, keepdims=True)
+      true_probs = probs[np.arange(logits.shape[0]), labels] # updates probs by taking only the probs for the true labels
+      # true_probs --> cross-entropy loss L = -log(true_probs)
+      # cross-entropy loss
+      loss = -np.mean(np.log(true_probs)) # loss = L
+      
+      '''d_logits
+        = dL/d_logits = dL/d_true_probs * d_true_probs/d_probs * d_probs/d_exp_logits * d_exp_logits/d_logits
+        = probs - one-hot_for_true_label (proof in copy after simplications)
+      '''
+      d_logits = probs.copy() # separate variable, we need probs if not .copy() probs get changed
+      one_hot_y = np.zeros((len(logits), len(logits[1])))
+      one_hot_y[np.arange(len(logits)), labels] = 1
+      d_logits = (probs - one_hot_y)/5
+      return loss, d_logits 
+    
+    return loss_fn
 
 # Step 7 - make_sequential (not yet solved)
 # TODO: implement
