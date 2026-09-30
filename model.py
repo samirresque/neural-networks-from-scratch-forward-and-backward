@@ -121,8 +121,6 @@ def make_activation(kind='relu'):
 
     return {'params': {}, 'forward': forward, 'backward': backward}
 
-    pass
-
 # Step 5 - initialize_weights
 def initialize_weights(in_dim, out_dim, scheme='he'):
     """Return (W, b) for a dense layer.
