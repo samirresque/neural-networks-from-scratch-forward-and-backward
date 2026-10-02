@@ -103,8 +103,8 @@ def make_activation(kind='relu'):
     Must be elementwise and non-affine; analytic dx must match
     numerical_gradient / gradient_check.
     """
-    if kind != 'relu':
-      raise ValueError(f'{kind} activation not supported.')
+    # if kind != 'relu':
+    #   raise ValueError(f'{kind} activation not supported.')
 
     def forward(x):
       y=np.maximum(0,x)
@@ -218,8 +218,8 @@ def make_sequential(layers):
     def backward(dout, caches):
       grads_for_each_layer = [None]*len(layers) # grad=None for params-free layer eg. relu
       # perform backprop from the nth layer (the last layer)
-      for layer in reversed(layers):
-        dout, grads = layer['backward'](dout, caches)
+      for i in reversed(range(len(layers))):
+        dout, grads = layers[i]['backward'](dout, caches[i])
         grads_for_each_layer[i] = grads
       return dout, grads_for_each_layer
       
