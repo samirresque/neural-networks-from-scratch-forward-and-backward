@@ -174,14 +174,14 @@ def make_loss(kind='cross_entropy'):
       # cross-entropy loss
       loss = -np.mean(np.log(true_probs)) # loss = L
       
-      '''d_logits
+      '''d_logits 
         = dL/d_logits = dL/d_true_probs * d_true_probs/d_probs * d_probs/d_exp_logits * d_exp_logits/d_logits
         = probs - one-hot_for_true_label (proof in copy after simplications)
       '''
       d_logits = probs.copy() # separate variable, we need probs if not .copy() probs get changed
       one_hot_y = np.zeros((len(logits), len(logits[1])))
       one_hot_y[np.arange(len(logits)), labels] = 1
-      d_logits = (probs - one_hot_y)/5
+      d_logits = (probs - one_hot_y)/len(logits)
       return loss, d_logits 
     
     return loss_fn
