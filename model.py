@@ -179,8 +179,9 @@ def make_loss(kind='cross_entropy'):
         = probs - one-hot_for_true_label (proof in copy after simplications)
       '''
       d_logits = probs.copy() # separate variable, we need probs if not .copy() probs get changed
-      one_hot_y = np.zeros((len(logits), len(logits[1])))
+      one_hot_y = np.zeros_like(logits)
       one_hot_y[np.arange(len(logits)), labels] = 1
+      # one_hot_y[np.arange(len(logits)), labels] = 1
       d_logits = (probs - one_hot_y)/len(logits)
       return loss, d_logits 
     
@@ -230,8 +231,37 @@ def make_sequential(layers):
       "params": [layer['params'] for layer in layers]
     }
 
-# Step 8 - forward_backward (not yet solved)
-# TODO: implement
+# Step 8 - forward_backward
+def forward_backward(model, loss_fn, x, y):
+    """Run one full forward-backward sweep on a batch.
+
+    Inputs:
+      model: sequential dict with 'forward', 'backward', 'params'
+             model['forward'](x) -> (logits, caches)
+             model['backward'](d_logits, caches) -> (dx, param_grads)
+      loss_fn: callable (logits, y) -> (loss, d_logits)
+      x: np.ndarray (batch, in_dim)
+      y: np.ndarray (batch,) integer labels
+
+    Returns:
+      loss: float, scalar batch loss
+      param_grads: nested np.ndarrays matching model['params'] layout
+                   (gradients of loss w.r.t. every parameter)
+    """
+
+    # forward yields the following:
+    logits, caches = model['forward'](x)
+    ''' 
+    loss_fn yields:
+    d_logits = dL/d_logits where logits are inputs to softmax 
+    '''
+    loss, d_logits = loss_fn(logits, y)   
+
+    # now that we obtained loss and d_logits as a param, we do backward
+    dout, grads_for_each_layer = model['backward'](d_logits, caches)
+
+
+    return loss, grads_for_each_layer
 
 # Step 9 - make_optimizer (not yet solved)
 # TODO: implement
