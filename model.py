@@ -278,8 +278,22 @@ def make_optimizer(params, lr=1e-2, kind='sgd'):
       unchanged. Repeated steps must reduce a simple convex objective
       within a modest fixed budget and keep values finite.
     """
-    # TODO: your approach here
-    pass
+            
+
+    def update(p, g):
+        if isinstance(p, dict):
+            for key in p:
+                update(p[key], g[key])
+        elif isinstance(p, (list, tuple)):
+            for p_i, g_i in zip(p, g):
+                update(p_i, g_i)
+        else:
+            p -= lr * g
+
+    def step(grads):
+        update(params, grads)
+
+    return {'step': step}
 
 # Step 10 - train_step (not yet solved)
 # TODO: implement
