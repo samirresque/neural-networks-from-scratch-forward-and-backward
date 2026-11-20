@@ -338,7 +338,6 @@ def train(model, loss_fn, optimizer, x, y, epochs, batch_size, seed=0):
       train_step loss over minibatches in epoch t.
       Model parameters are updated in place; shapes unchanged.
     """
-    # TODO: your approach here
     rng = np.random.default_rng(0)
     history = []
     N = x.shape[0]
